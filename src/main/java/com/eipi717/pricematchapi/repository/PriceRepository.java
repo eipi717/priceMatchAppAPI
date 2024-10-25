@@ -9,15 +9,15 @@ import java.util.List;
 
 @Repository
 public interface PriceRepository extends JpaRepository<Price, Long> {
-    public List<Price> findByProductProductId(Long productId, Sort sort);
+    List<Price> findByProductProductId(Long productId);
 
-    public List<Price> findByProductProductName(String productName, Sort sort);
+    List<Price> findByProductProductName(String productName);
 
-    public List<Price> findByStoreStoreId(Long storeId, Sort sort);
+    List<Price> findByStoreStoreId(Long storeId, Sort sort);
 
-    public List<Price> findByStoreStoreName(String storeName, Sort sort);
+    List<Price> findByStoreStoreName(String storeName, Sort sort);
 
-    public Price findByProductProductNameAndStoreStoreName(String productName, String storeName);
+    Price findByProductProductNameAndStoreStoreName(String productName, String storeName);
 
-    public boolean existsByProductProductNameAndStoreStoreName(String productName, String storeName);
+    boolean existsByProductProductNameAndStoreStoreName(String productName, String storeName);
 }

@@ -37,19 +37,21 @@ public class ProductService {
 
     public void createProduct(ProductDTO productDTO) {
 
-        if (!productRepository.existsByProductName(productDTO.productName())) {
+        if (!productRepository.existsByProductName(productDTO.getProductName())) {
             Product product = new Product();
 
-            product.setProductName(productDTO.productName());
-            product.setProductCategory(productDTO.productCategory());
+            product.setProductName(productDTO.getProductName());
+            product.setProductCategory(productDTO.getProductCategory());
+            product.setProductImage(productDTO.getProductImage());
             product.setCreatedTime(System.currentTimeMillis());
             product.setUpdatedTime(System.currentTimeMillis());
 
             productRepository.save(product);
             productRepository.flush();
         }
-        Product product = productRepository.findByProductName(productDTO.productName());
-        product.setProductCategory(productDTO.productCategory());
+        Product product = productRepository.findByProductName(productDTO.getProductName());
+        product.setProductImage(productDTO.getProductImage());
+        product.setProductCategory(productDTO.getProductCategory());
         product.setUpdatedTime(System.currentTimeMillis());
         productRepository.save(product);
         productRepository.flush();

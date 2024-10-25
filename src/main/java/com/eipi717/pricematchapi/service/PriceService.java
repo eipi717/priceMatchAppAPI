@@ -53,24 +53,20 @@ public class PriceService {
      * Retrieves prices for a specific product ID, sorted according to the provided parameters.
      *
      * @param productId the ID of the product
-     * @param sortBy    the property to sort by
-     * @param orderBy   the direction to sort (asc/desc)
-     * @return a list of sorted Price entities
+     * @return a Price entities
      */
-    public List<Price> getByProductId(Long productId, String sortBy, String orderBy) {
-        return priceRepository.findByProductProductId(productId, Sort.by(QueryUtils.getSortingDirection(orderBy), sortBy));
+    public List<Price> getByProductId(Long productId) {
+        return priceRepository.findByProductProductId(productId);
     }
 
     /**
      * Retrieves prices for a specific product name, sorted according to the provided parameters.
      *
      * @param productName the name of the product
-     * @param sortBy      the property to sort by
-     * @param orderBy     the direction to sort (asc/desc)
-     * @return a list of sorted Price entities
+     * @return a Price entities
      */
-    public List<Price> getByProductName(String productName, String sortBy, String orderBy) {
-        return priceRepository.findByProductProductName(productName, Sort.by(QueryUtils.getSortingDirection(orderBy), sortBy));
+    public List<Price> getByProductName(String productName) {
+        return priceRepository.findByProductProductName(productName);
     }
 
     /**

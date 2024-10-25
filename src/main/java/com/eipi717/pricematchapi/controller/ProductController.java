@@ -1,15 +1,21 @@
 package com.eipi717.pricematchapi.controller;
 
+import com.eipi717.pricematchapi.dtoConvertor.ProductWithPriceDTOConvertor;
 import com.eipi717.pricematchapi.dtos.ProductDTO;
+import com.eipi717.pricematchapi.dtos.ProductWithPriceDTO;
+import com.eipi717.pricematchapi.entity.Price;
 import com.eipi717.pricematchapi.entity.Product;
 import com.eipi717.pricematchapi.response.SelfDefinedResponse;
+import com.eipi717.pricematchapi.service.PriceService;
 import com.eipi717.pricematchapi.service.ProductService;
+import com.eipi717.pricematchapi.utils.QueryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,10 +23,12 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final PriceService priceService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, PriceService priceService) {
         this.productService = productService;
+        this.priceService = priceService;
     }
 
     @GetMapping(value = "/getAllProducts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,7 +70,7 @@ public class ProductController {
             @RequestParam(name = "orderBy", defaultValue = "DESC") String orderBy
     ) {
         SelfDefinedResponse<List<Product>> selfDefinedResponse = new SelfDefinedResponse();
-        List<Product> productList = productService.getAllProduct(sortBy, orderBy);
+        List<Product> productList = productService.getProductByCategory(productCategory, sortBy, orderBy);
         selfDefinedResponse.setData(productList);
         selfDefinedResponse.setCount(productList.size());
         return new ResponseEntity<>(selfDefinedResponse, HttpStatus.OK);
@@ -84,5 +92,27 @@ public class ProductController {
         productService.deleteProductById(productId);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAllProductsWithPrice", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllProductsWithPrice(
+            @RequestParam(name = "sortBy", defaultValue = "productId") String sortBy,
+            @RequestParam(name = "orderBy", defaultValue = "DESC") String orderBy
+    ) {
+        SelfDefinedResponse<List<ProductWithPriceDTO>> selfDefinedResponse = new SelfDefinedResponse();
+        List<ProductWithPriceDTO> productWithPriceDTOList = new ArrayList<>();
+
+        List<Product> productList = productService.getAllProduct(sortBy, orderBy);
+        productList.forEach(product -> {
+            List<Price> productCurrentPrice = priceService.getByProductId(product.getProductId());
+            if (!productCurrentPrice.isEmpty()) {
+                productWithPriceDTOList.add(ProductWithPriceDTOConvertor.convert(product, QueryUtils.getLatestPrice(productCurrentPrice)));
+            } else {
+                productWithPriceDTOList.add(ProductWithPriceDTOConvertor.convert(product, null));
+            }
+        });
+        selfDefinedResponse.setData(productWithPriceDTOList);
+        selfDefinedResponse.setCount(productList.size());
+        return new ResponseEntity<>(selfDefinedResponse, HttpStatus.OK);
     }
 }

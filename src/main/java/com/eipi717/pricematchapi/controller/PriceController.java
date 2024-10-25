@@ -45,39 +45,30 @@ public class PriceController {
 
     @GetMapping(value = "/getByProductId", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getByProductId(
-            @RequestParam Long productId,
-            @RequestParam(name = "sortBy", defaultValue = "priceId") String sortBy,
-            @RequestParam(name = "orderBy", defaultValue = "DESC") String orderBy
+            @RequestParam Long productId
     ) {
-        List<Price> pricesList = priceService.getByProductId(productId, sortBy, orderBy);
+        List<Price> priceList = priceService.getByProductId(productId);
         List<PriceDTO> priceDTOList = new ArrayList<>();
-
-        for (Price price : pricesList) {
+        priceList.forEach(price -> {
             priceDTOList.add(PriceDTOConvertor.convert(price));
-        }
-
+        });
         SelfDefinedResponse<List<PriceDTO>> selfDefinedResponse = new SelfDefinedResponse();
         selfDefinedResponse.setData(priceDTOList);
-        selfDefinedResponse.setCount(priceDTOList.size());
         return new ResponseEntity<>(selfDefinedResponse, HttpStatus.OK);
     }
 
     @GetMapping(value = "/getByProductName", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getByProductName(
-            @RequestParam String productName,
-            @RequestParam(name = "sortBy", defaultValue = "priceId") String sortBy,
-            @RequestParam(name = "orderBy", defaultValue = "DESC") String orderBy
+            @RequestParam String productName
     ) {
-        List<Price> pricesList = priceService.getByProductName(productName, sortBy, orderBy);
+        List<Price> priceList = priceService.getByProductName(productName);
         List<PriceDTO> priceDTOList = new ArrayList<>();
-
-        for (Price price : pricesList) {
+        priceList.forEach(price -> {
             priceDTOList.add(PriceDTOConvertor.convert(price));
-        }
+        });
 
         SelfDefinedResponse<List<PriceDTO>> selfDefinedResponse = new SelfDefinedResponse();
         selfDefinedResponse.setData(priceDTOList);
-        selfDefinedResponse.setCount(priceDTOList.size());
         return new ResponseEntity<>(selfDefinedResponse, HttpStatus.OK);
     }
 
