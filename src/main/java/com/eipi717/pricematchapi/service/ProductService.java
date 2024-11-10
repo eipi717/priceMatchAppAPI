@@ -5,10 +5,14 @@ import com.eipi717.pricematchapi.entity.Product;
 import com.eipi717.pricematchapi.repository.ProductRepository;
 import com.eipi717.pricematchapi.utils.QueryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
@@ -18,8 +22,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProduct(String sortBy, String orderBy) {
-        return productRepository.findAll(Sort.by(QueryUtils.getSortingDirection(orderBy), sortBy));
+    public Page<Product> getAllProduct(int page, int item, String sortBy, String orderBy) {
+        Pageable pageable = PageRequest.of(page, item, Sort.by(QueryUtils.getSortingDirection(orderBy), sortBy));
+        return productRepository.findAll(pageable);
     }
 
     public Product getProductByName(String productName) {
@@ -30,9 +35,9 @@ public class ProductService {
         return productRepository.findByProductId(productId);
     }
 
-    public List<Product> getProductByCategory(String productCategory, String sortBy, String orderBy) {
-
-        return productRepository.findByProductCategory(productCategory, Sort.by(QueryUtils.getSortingDirection(orderBy), sortBy));
+    public List<Product> getProductByCategory(int page, int size, String productCategory, String sortBy, String orderBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(QueryUtils.getSortingDirection(orderBy), sortBy));
+        return productRepository.findByProductCategory(productCategory, pageable);
     }
 
     public void createProduct(ProductDTO productDTO) {
@@ -60,5 +65,9 @@ public class ProductService {
     public void deleteProductById(Long productId) {
         productRepository.deleteById(productId);
         productRepository.flush();
+    }
+
+    public List<Product> searchProduct(String query) {
+        return productRepository.findByProductNameContaining(query);
     }
 }

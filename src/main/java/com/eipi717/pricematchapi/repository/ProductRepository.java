@@ -1,7 +1,7 @@
 package com.eipi717.pricematchapi.repository;
 
 import com.eipi717.pricematchapi.entity.Product;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +14,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>, PagingA
 
     public Product findByProductId(Long productId);
 
-    public List<Product> findByProductCategory(String productCategory, Sort sort);
+    public List<Product> findByProductCategory(String productCategory, Pageable pageable);
 
     public boolean existsByProductName(String productName);
+
+    public List<Product> findByProductNameContaining(String query);
 }
