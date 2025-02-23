@@ -25,6 +25,11 @@ public class UserService {
         return userRepository.findByUserName(username);
     }
 
+    public User getUserByUserId(Long userId) {
+        return userRepository.findByUserId(userId);
+    }
+
+    //    TODO: record the activity
     public boolean changePassword(PasswordChangeDTO passwordChangeDTO) {
         User user = getUserByUserName(passwordChangeDTO.getUsername());
         if (!HashUtils.sha256(passwordChangeDTO.getOldPassword()).equals(user.getPassword())) return false;
@@ -34,6 +39,7 @@ public class UserService {
         return true;
     }
 
+    //    TODO: record the activity
     public void createAccount(AccountCreationDTO accountCreationDTO) {
         User user = new User();
         user.setUserName(accountCreationDTO.getUsername());

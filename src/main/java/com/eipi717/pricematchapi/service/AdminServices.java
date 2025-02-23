@@ -1,6 +1,7 @@
 package com.eipi717.pricematchapi.service;
 
 import com.eipi717.pricematchapi.entity.Activity;
+import com.eipi717.pricematchapi.entity.User;
 import com.eipi717.pricematchapi.repository.ActivityRepository;
 import com.eipi717.pricematchapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -11,10 +12,12 @@ import java.util.List;
 public class AdminServices {
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public AdminServices(ActivityRepository activityRepository, UserRepository userRepository) {
+    public AdminServices(ActivityRepository activityRepository, UserRepository userRepository, UserService userService) {
         this.activityRepository = activityRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public List<Activity> findAllActivities() {
@@ -35,5 +38,21 @@ public class AdminServices {
         activityRepository.flush();
 
         return activities.size();
+    }
+
+    /***
+     * Record activities (Logon, Logout, ...)
+     * @param userId
+     * @param activityName
+     */
+    public void createActivity(Long userId, String activityName) {
+        Activity activity = new Activity();
+        User user = userService.getUserByUserId(userId);
+
+        activity.setUser(user);
+        activity.setActivityName(activityName);
+        activity.setCreatedTime(System.currentTimeMillis());
+
+        activityRepository.save(activity);
     }
 }
