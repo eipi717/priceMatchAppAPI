@@ -93,6 +93,7 @@ cd PriceMatchAPI`
 
 2. Configure database settings in `src/main/resources/db.properties`. 
 3. Build and run the application
+4. Enjoy!
 
 ## License
 
