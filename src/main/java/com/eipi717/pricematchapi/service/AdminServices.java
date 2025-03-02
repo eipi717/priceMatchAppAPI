@@ -45,6 +45,7 @@ public class AdminServices {
      * @param userId
      * @param activityName
      */
+    // TODO: Should be handle by system
     public void createActivity(Long userId, String activityName) {
         Activity activity = new Activity();
         User user = userService.getUserByUserId(userId);
