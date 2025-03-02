@@ -101,5 +101,5 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For inquiries, reach out at `nicholasriven717@gmail.com`.
+For inquiries, reach out at `nicholasriven717@gmail.com` or `https://www.linkedin.com/in/nicholaschho/`.
 
